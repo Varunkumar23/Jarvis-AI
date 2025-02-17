@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis AI</title>
+</head>
+<body>
+    <h2>Jarvis AI Chat</h2>
+    <input type="text" id="userInput" placeholder="Type your question...">
+    <button onclick="sendMessage()">Send</button>
+    <p><strong>AI Response:</strong> <span id="response"></span></p>
+
+    <h2>Voice Interaction</h2>
+    <button onclick="sendVoice()">Speak</button>
+    <p><strong>You said:</strong> <span id="userSpeech"></span></p>
+    <p><strong>Jarvis Response:</strong> <span id="voiceResponse"></span></p>
+
+    <script>
+        async function sendMessage() {
+            let userInput = document.getElementById("userInput").value;
+
+            let response = await fetch("http://127.0.0.1:5000/text", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: userInput })
+            });
+
+            let data = await response.json();
+            document.getElementById("response").innerText = data.response;
+        }
+
+        async function sendVoice() {
+            let response = await fetch("http://127.0.0.1:5000/voice", { method: "GET" });
+            let data = await response.json();
+            document.getElementById("userSpeech").innerText = data.prompt;
+            document.getElementById("voiceResponse").innerText = data.response;
+        }
+    </script>
+</body>
+</html>
